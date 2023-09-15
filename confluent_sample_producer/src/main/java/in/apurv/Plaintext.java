@@ -48,17 +48,24 @@ public class Plaintext {
     }
 
     private static void init() throws IOException {
-        props = loadConfig("src\\main\\resources\\client.properties");
+        props = loadConfig("/Users/ashoktla/IdeaProjects/samples/confluent_sample_producer/src/main/resources/client.properties");
         producer = new KafkaProducer<>(props);
         consumer = new KafkaConsumer<>(props);
-
+        //adminClient = AdminClient.create(props);
     }
 
 
     public static void main(String[] args) throws Exception {
         init();
-        String topicName = "plaintext_test_topic";
-        new Thread(() -> {
+
+        String topicName = "topic_0";
+       /* int numPartitions = 1;
+        short replicationFactor = 3;
+        NewTopic newTopic = new NewTopic(topicName, numPartitions, replicationFactor);
+        adminClient.createTopics(Collections.singletonList(newTopic)).all().get();*/
+
+        System.out.println("Topic '" + topicName + "' created successfully!");
+       /* new Thread(() -> {
             IntStream.range(1, 1000).forEach(i -> {
                 System.out.println("producing "+ i);
                 producer.send(new ProducerRecord<>(topicName, "key" + i, "value" + i)
@@ -75,7 +82,7 @@ public class Plaintext {
                 System.out.println("produced "+ i);
             });
             producer.close();
-        }).start();
+        }).start();*/
         new Thread(() -> {
             consumer.subscribe(List.of(topicName));
             while (true) {
